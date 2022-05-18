@@ -1,0 +1,98 @@
+
+application {
+  config {
+    baseName productgw,
+    applicationType gateway,
+    packageName io.owlstreet.productgw,
+    authenticationType jwt,
+    prodDatabaseType mongodb,
+    clientFramework react
+  }
+  entities *
+}
+
+application {
+  config {
+    baseName product,
+    applicationType microservice,
+    packageName io.owlstreet.product,
+    authenticationType jwt,
+    prodDatabaseType mongodb,
+    databaseType mongodb,
+  }
+  entities Tenant, Product, Item, Channel, Resource
+}
+
+entity Tenant {
+	id	Uuid unique
+	tenantCode String required unique
+}
+
+entity Product {
+	id Uuid unique
+	externalId String required
+    name String
+    created DateTime
+    modified DateTime
+    content TextBlob 
+}
+
+entity Item {
+	id Uuid unique
+	externalId String
+    partNo String required
+    created DateTime
+    modified DateTime
+    content TextBlob
+}
+
+entity Channel {
+	id Uuid unique
+    externalId String
+    name String
+}
+
+entity AttributeValue {
+	id Uuid unique
+    code String
+    locale String
+    value String
+}
+
+entity Resource {
+	id Uuid unique
+    mimeType String
+    name String
+    url String
+    checksum String
+}
+
+relationship OneToMany {
+  Tenant to Channel
+}
+
+relationship ManyToMany {
+  Channel to Product
+}
+
+relationship OneToMany {
+	Product to Item
+}
+
+relationship ManyToOne {
+	Resource to Product
+}
+
+relationship ManyToOne {
+	Resource to Item
+}
+
+relationship OneToMany {
+  Product to Attributevalue
+}
+
+relationship OneToMany {
+  Item to Attributevalue
+}
+
+
